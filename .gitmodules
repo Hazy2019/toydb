@@ -1,0 +1,3 @@
+[submodule "cppcraft"]
+	path = cppcraft
+	url = git@github.com:Hazy2019/cppcraft.git
