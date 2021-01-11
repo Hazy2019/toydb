@@ -1,0 +1,12 @@
+probe begin {
+  printf ("probe begin: pid is %d\n", pid())
+}
+probe end {
+  printf ("probe end\n")
+}
+probe process("/home/ghostv/toydb/build/TestStapC").function("Run@tests/TestStap.c").call {
+  printf("call   a: %s\n", $a$)
+}
+probe process("/home/ghostv/toydb/build/TestStapC").function("Run@tests/TestStap.c").return {
+  printf("return a: %s\n", $a$)
+}

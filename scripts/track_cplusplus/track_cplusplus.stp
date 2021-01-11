@@ -1,0 +1,20 @@
+probe begin {
+  printf ("probe begin: pid is %d\n", pid())
+}
+probe end {
+  printf ("probe end\n")
+}
+probe process("/home/ghostv/toydb/build/TestStap").function("Run@tests/TestStap.cc").call {
+#probe process("/home/ghostv/toydb/build/TestStap").function("Run@tests/TestStap.cc:6").call {
+#printf ("%s\n", $s$)
+  printf ("in : %s\n", user_string($s->data_))
+}
+probe process("/home/ghostv/toydb/build/TestStap").function("Run@tests/TestStap.cc").return {
+  printf ("out: %s\n", $s$)
+  printf ("out: %s\n", @entry(user_string($s->data_)))
+}
+#probe process("/home/ghostv/toydb/build/TestStap").function("Run2@tests/TestStap.cc:15").call {
+#  printf ("%s\n", $x$)
+#  printf ("%p\n", $x->data_)
+#  println (user_string($x->data_))
+#}
