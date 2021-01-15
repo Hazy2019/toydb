@@ -5,8 +5,25 @@ probe end {
   printf ("probe end\n")
 }
 probe process("/home/ghostv/toydb/build/TestStapC").function("Run@tests/TestStap.c").call {
-  printf("call   a: %s\n", $a$)
+  printf("call  ao: %s\n", $a$)
+  printf("call  ap: %s\n", (&$a)$)
+  
+  printf("call  val_of_a : %p\n", $a)
+  printf("call  addr_of_a: %p\n", &$a)
+
+  printf("call LOCAL: %s\n", $LOCAL$)
 }
 probe process("/home/ghostv/toydb/build/TestStapC").function("Run@tests/TestStap.c").return {
-  printf("return a: %s\n", $a$)
+  printf("return entry_addr_of_a: %p\n", @entry(&$a))
+  printf("return entry_val_of_a: %p\n", @entry($a))
+  printf("return a(is changed ok): %s\n", @cast(@entry($a), "struct Co")$)
+  printf("return a(not a valid address): %s\n", @cast(@entry(&$a), "struct Co")$)
+  
+  printf("return LOCAL: %s\n", @cast(@entry(&$LOCAL), "struct Co")$)
+}
+
+probe process("/home/ghostv/toydb/build/TestStapC").provider("PROV0").mark("BEFORERUNRETURN") {
+  printf("before return ac1: %s\n", @cast(&$a, "struct Co")$)
+  printf("before return ac2: %d, %s\n", @cast(&$a, "struct Co")->id_, user_string(@cast(&$a, "struct Co")->data_))
+  printf("before return anc: %d, %s\n", (&$a)->id_, user_string((&$a)->data_))
 }
